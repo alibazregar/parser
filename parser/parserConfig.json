@@ -1,0 +1,10 @@
+{
+    "removeComments":true,
+    "htmlTags" :[
+        {
+            "tag": "img",
+            "type" : "single",
+            "allow-content" : false  
+        }
+    ]
+}

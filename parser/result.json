@@ -1,0 +1,171 @@
+{
+  "$type": "group",
+  "core": "group",
+  "name": "ROOT_GROUP",
+  "Commands": [
+    {
+      "$type": "dbsource",
+      "core": "dbsource",
+      "ConnectionName": "basiscore",
+      "extra-attribute": { "mid": "5", "lid": "1", "usedforid": "7937" },
+      "name": "dboffices",
+      "Members": [
+        { "name": "offices", "extra-attribute": { "type": "view" } },
+        {
+          "name": "data1",
+          "extra-attribute": { "type": "view", "request": "rdfa" }
+        }
+      ]
+    },
+    {
+      "$type": "dbsource",
+      "core": "dbsource",
+      "ConnectionName": "basiscore",
+      "extra-attribute": { "mid": "5", "lid": "1", "usedforid": "8355" },
+      "name": "dbabout",
+      "Members": [{ "name": "about", "extra-attribute": { "type": "view" } }]
+    },
+    {
+      "$type": "dbsource",
+      "core": "dbsource",
+      "ConnectionName": "trust_login",
+      "name": "captcha",
+      "Members": [
+        {
+          "name": "code1",
+          "extra-attribute": { "type": "scalar", "request": "captcha" }
+        }
+      ]
+    },
+    {
+      "$type": "rawtext",
+      "core": "rawtext",
+      "content": "\r\n\r\n<!doctype html>\r\n<html>\r\n<head>\r\n<meta charset=\"utf-8\">\r\n<meta name=\"author\" content=\"BasisCore\">\r\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\r\n<title>\r\n"
+    },
+    {
+      "$type": "print",
+      "core": "print",
+      "data-member-name": "cms.seo",
+      "faces": [{ "content": "@title" }]
+    },
+    { "$type": "rawtext", "core": "rawtext", "content": "\r\n</title>\r\n" },
+    {
+      "$type": "print",
+      "core": "print",
+      "data-member-name": "cms.seo",
+      "faces": [
+        {
+          "content": "\r\n <meta name=\"Description\" content=\"@description\" />\r\n "
+        }
+      ]
+    },
+    {
+      "$type": "rawtext",
+      "core": "rawtext",
+      "content": "\r\n<link rel=\"stylesheet\" href=\"/css/css.css\">\r\n<link rel=\"stylesheet\" href=\"/css/domain.css\">\r\n<link rel=\"stylesheet\" href=\"css/domain1.css\" type=\"text/css\" />\r\n<link rel=\"stylesheet\" href=\"/css/font-awesome.min.css\">\r\n<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/menu.css\" />\r\n<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/RezervationDomain.css\" />\r\n<script src=\"/js/jquery.min.js\" type=\"text/javascript\"></script>\r\n<script src=\"/js/modernizr.js\"></script>\r\n<script type=\"text/javascript\">\r\n$(document).on(\"scroll\",function(){\r\nif($(document).width()>768){\r\nif($(document).scrollTop()>10){ $(\"#myHeader\").removeClass(\"large\").addClass(\"small\");}\r\nelse{$(\"#myHeader\").removeClass(\"small\").addClass(\"large\");}}});\r\n</script>\r\n<script src=\"http://maps.googleapis.com/maps/api/js?key=AIzaSyDY0kkJiTPVd2U7aTOAwhc9ySH6oHxOIYM&sensor=false\"></script>\r\n<script type=\"text/javascript\" src='js/map.js'></script><!-- map contactus -->\r\n</head>\r\n<body>\r\n"
+    },
+    {
+      "$type": "print",
+      "core": "print",
+      "data-member-name": "dboffices.data1",
+      "layout-content": "@child",
+      "faces": [
+        {
+          "content": "\r\n<div class=\"inner-container\" itemprop=\"@vocabulary\" itemscope itemtype=\"@link\">\r\n"
+        }
+      ]
+    },
+    {
+      "$type": "rawtext",
+      "core": "rawtext",
+      "content": "\r\n<div id=\"container-body\">\r\n "
+    },
+    { "$type": "call", "core": "call", "FileName": "header.inc" },
+    {
+      "$type": "rawtext",
+      "core": "rawtext",
+      "content": "\r\n <main class=\"cd-main-content\"> <div class=\"loginRegister\"></div>\r\n <div class=\"clr\"></div>\r\n <div class=\"clr\"></div>\r\n <div id=\"mySlider\" class=\"bc-col bc-heightmain bc-zindex-1\"><img src=\"images/about.jpg\" alt=\"\"> </div>\r\n <div class=\"clr\"></div>\r\n <div class=\"clr\"></div>\r\n <!-- main body -->\r\n <div class=\"bc-col bc-heightauto bc-right\" id=\"maincontent\">\r\n <div class=\"bc-main bc-heightmain bc-heightauto\" >\r\n <div class=\"titleAbout\">\r\n <h1>دمو نرم افزار رزرواسیون بیسیس فلای</h1>\r\n <div class=\"clr\"></div>\r\n <p><span class=\"contactImg\"></span>بیسیس فلای، بهترین پلتفرم برای سامانه آنلاین رزرواسیون</p>\r\n </div>\r\n <!-- info mitra gahst -->\r\n <div id=\"specialTour\" class=\"bc-col bc-right\" >\r\n <div class=\"bc-col bc-heightmain bc-heightauto\"> \r\n <!-- about us -->\r\n <div class=\"bc-col l8 m12 s12 bc-heightauto bc-right \" >\r\n <div class=\"tith2\">\r\n \r\n </div>\r\n <div id=\"txtAbout\">\r\n "
+    },
+    {
+      "$type": "print",
+      "core": "print",
+      "data-member-name": "dboffices.offices",
+      "faces": [{ "filter": "typeid=144", "content": "@largetext" }]
+    },
+    {
+      "$type": "rawtext",
+      "core": "rawtext",
+      "content": "\r\n </div>\r\n <!-- map -->\r\n <div class=\"content_map\">\r\n \r\n </div>\r\n </div>\r\n <!-- contact us -->\r\n <div class=\"bc-col l4 m12 s12 bc-heightauto bc-left \" id=\"contactUsInfo\">\r\n <div class=\"tith2\">\r\n <h2>تماس با بیسیس فلای:</h2>\r\n </div>\r\n "
+    },
+    {
+      "$type": "print",
+      "core": "print",
+      "data-member-name": "dboffices.offices",
+      "faces": [
+        {
+          "filter": "prpid=7999",
+          "content": "\r\n <div class=\"p-text-inner\">\r\n <div class=\"contactImg\"></div>\r\n <p><span>نشانی: </span> تهران، خیابان شهید بهشتی، مابین سهروردی و میدان تختی، پلاک 183</p>\r\n </div>\r\n "
+        }
+      ]
+    },
+    {
+      "$type": "print",
+      "core": "print",
+      "data-member-name": "dboffices.offices",
+      "faces": [
+        {
+          "filter": "prpid=8000",
+          "content": "\r\n <div class=\"p-text-inner\">\r\n <div class=\"contactImg\"></div>\r\n <p itemprop=\"@vocabulary\" ><span>تلفن : </span>@answer</p>\r\n </div>\r\n "
+        }
+      ]
+    },
+    {
+      "$type": "print",
+      "core": "print",
+      "data-member-name": "dboffices.offices",
+      "faces": [
+        {
+          "filter": "prpid=8393",
+          "content": "\r\n <div class=\"p-text-inner\">\r\n <div class=\"contactImg\"></div>\r\n <p itemprop=\"@vocabulary\" ><span>تلفکس : </span>@answer</p>\r\n </div>\r\n "
+        }
+      ]
+    },
+    {
+      "$type": "print",
+      "core": "print",
+      "data-member-name": "dboffices.offices",
+      "faces": [
+        {
+          "filter": "prpid=8001",
+          "content": "\r\n <div class=\"p-text-inner\">\r\n <div class=\"contactImg\"></div>\r\n <p itemprop=\"@vocabulary\" ><span>ایمیل : </span> @answer</p>\r\n </div>\r\n "
+        }
+      ]
+    },
+    {
+      "$type": "rawtext",
+      "core": "rawtext",
+      "content": "\r\n <div class=\"p-text-inner\">\r\n <div class=\"contactImg\"></div>\r\n \r\n </div>\r\n <div id=\"formContactus\">\r\n <div class=\"tith2\">\r\n <h2>فرم تماس با ما :</h2>\r\n </div>\r\n <form action=\"ContactForm.bc\" method=\"post\" >\r\n <input name=\"name\" type=\"text\" placeholder=\"نام و نام خانوادگی\">\r\n <input name=\"mob\" type=\"tel\" placeholder=\"شماره تلفن تماس\">\r\n <input name=\"email\" type=\"email\" placeholder=\"ایمیل\">\r\n <textarea name=\"comment\" cols=\"28\" rows=\"2\" placeholder=\"متن تماس\" id=\"comment\" ></textarea>\r\n "
+    },
+    {
+      "$type": "print",
+      "core": "print",
+      "data-member-name": "captcha.code1",
+      "faces": [
+        {
+          "content": "\r\n <p>\r\n <input type=\"text\" name=\"captcha\" id=\"captcha\" >\r\n <span class=\"captcha11\">\r\n <input type=\"hidden\" value=\"@captcha\" name=\"captchaid\">\r\n <img class=\"cap\" width=\"80\" height=\"35\" alt=\"همسفر\" src=\"@captcha\"> </span> <a id=\"refImg\" class=\"refreshimg1\" title=\"Click to refresh image\" href=\"#\"><span class=\"contactImg\"></span></a> </p>\r\n "
+        }
+      ]
+    },
+    {
+      "$type": "rawtext",
+      "core": "rawtext",
+      "content": "\r\n <input name=\"send\" type=\"submit\" value=\"ارسال\">\r\n </form>\r\n </div>\r\n </div>\r\n </div>\r\n </div>\r\n </div>\r\n </div>\r\n <div class=\"clr\"></div>\r\n <div class=\"clr\"></div>\r\n "
+    },
+    { "$type": "call", "core": "call", "FileName": "footer.inc" },
+    {
+      "$type": "rawtext",
+      "core": "rawtext",
+      "content": "\r\n </main>\r\n</div>\r\n<script type=\"text/javascript\" src=\"/js/jquery.validate.js\"></script> \r\n<script type=\"text/javascript\" src=\"/js/autoNumeric.js\"></script> \r\n<script type=\"text/javascript\">jQuery(function($) {$(\".pricetour\").autoNumeric('init');});</script> \r\n\r\n<script src=\"/js/mobile.custom.min.js\"></script> \r\n<script src=\"/js/menu.js\"></script>\r\n</body>\r\n</html>"
+    }
+  ]
+}
