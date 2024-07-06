@@ -164,6 +164,49 @@ const server = http.createServer(async (req, res) => {
         }
       }
     });
+  }else if (req.method === "POST" && req.url === "/api/commandfinder") {
+    let body = "";
+
+    req.on("data", (chunk) => {
+      body += chunk;
+    });
+
+    req.on("end", async () => {
+      try {
+        const data = JSON.parse(body);
+
+        const parsedData = await ParseToRawHtml.FindCommandByCore(data,query.core);
+        const jsonResponse = {
+          message: "successful",
+          html: parsedData,
+        };
+
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(jsonResponse));
+      } catch (error) {
+        if (error instanceof CustomError) {
+          res.writeHead(400, { "Content-Type": "application/json" });
+          res.end(
+            JSON.stringify({
+              errorid: 4,
+              message: "validation Error while processing JSON",
+              error: error.message,
+            })
+          );
+        } else {
+          res.writeHead(500, { "Content-Type": "application/json" });
+          res.end(
+            JSON.stringify({
+              errorid: 5,
+              success: false,
+              message: "Error processing text",
+              error: error,
+            })
+          );
+          console.log(error);
+        }
+      }
+    });
   } else {
     res.writeHead(404, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ message: "not-found", errorid: "6" }));
