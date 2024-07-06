@@ -1,9 +1,9 @@
 import http from "http";
-import parser from "./parser/parser.mjs";
-import CustomError from "./parser/models/customError.mjs";
-import ParseToRawHtml from "./parser/parseToRawHtml.mjs";
-import { AsyncResource } from "async_hooks";
-const {parseBody,parseBodyAndChangeToWebP} = parser;
+import parser from "./parser/parser.js";
+import CustomError from "./parser/models/customError.js";
+import ParseToRawHtml from "./parser/parseToRawHtml.js";
+import url from "node:url"
+const { parseBody, parseBodyAndChangeToWebP } = parser;
 const server = http.createServer(async (req, res) => {
   // Allow CORS for all origins
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -15,7 +15,9 @@ const server = http.createServer(async (req, res) => {
     res.end();
     return;
   }
-  if (req.method === "POST" && req.url === "/api/parse-html") {
+  const parsedUrl = url.parse(req.url, true);
+  const query = parsedUrl.query;
+  if (req.method === "POST" && parsedUrl.pathname === "/api/parse-html") {
     let requestData = "";
 
     req.on("data", (chunk) => {
@@ -24,11 +26,9 @@ const server = http.createServer(async (req, res) => {
 
     req.on("end", async () => {
       try {
+        console.log(requestData)
         const processedText = await parseBody(requestData);
-        const jsonResponse = {
-          message: "successful",
-          json: processedText,
-        };
+        console.log(processedText)
         if (
           !processedText.Commands ||
           !Array.isArray(processedText.Commands) ||
@@ -38,13 +38,20 @@ const server = http.createServer(async (req, res) => {
         ) {
           res.writeHead(200, { "Content-Type": "application/json" });
           res.end(
-            JSON.stringify({ index: 5, errorid: 3, message: successful  })
+            JSON.stringify({ index: 5, errorid: 3, message: "successful" })
           );
         } else {
-          
-          const webp_il = await parseBodyAndChangeToWebP(requestData)
-          res.writeHead(200, { "Content-Type": "application/json" });
-          res.end(JSON.stringify({page_il : jsonResponse, webp_il}));
+          if (query.webp ==true) {
+            const webp_il = await parseBodyAndChangeToWebP(requestData);
+            res.writeHead(200, {
+              "Content-Type": "application/json",
+            });
+            res.end(JSON.stringify({ index: 1 ,errorid :4 ,page_il: processedText, webp_il }));
+          } else {
+            const webp_il = await parseBodyAndChangeToWebP(requestData);
+            res.writeHead(200, { "Content-Type": "application/json" });
+            res.end(JSON.stringify({ page_il: processedText, webp_il ,index: 1 ,errorid :4}));
+          }
         }
       } catch (error) {
         console.log(error);

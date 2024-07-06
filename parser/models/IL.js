@@ -24,7 +24,6 @@ export default class IL {
     this.faces.push(face);
   }
   filter(obj = this){
-    console.log(typeof obj.core)
     const res = {}
     const Commands = obj.Commands
     delete obj.Commands
@@ -39,7 +38,7 @@ export default class IL {
     if(Commands){
         Commands.forEach((element)=>{
        if(element ){
-        const object =this.filter(element)
+        const object =this.toFilteredObject(element)
         finalCommands.push(object)
        }
      })

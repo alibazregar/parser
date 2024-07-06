@@ -1,0 +1,15 @@
+{
+  "External.service.dbservicemanager": {
+    "AddExtraAttribute": true,
+	"AddContentAsRawText":true,	
+    "Attributes": {
+      "core": {},
+      "Id": {},
+      "name": {
+        "Required": true
+      },
+      "if": {},
+      "run": { "Values": [ "AtServer", "AtClient", "None" ] }
+    }  
+  }
+}

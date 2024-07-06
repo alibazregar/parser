@@ -1,0 +1,13 @@
+{
+"external.ws.dbws":{
+  "AddContentAsRawText": true,
+  "AddExtraAttribute": true,
+  "Attributes": {
+    "core": {},
+      "Id": {},
+      "name": {},
+      "if": {},
+      "run": { "Values": [ "AtServer", "AtClient", "None" ] }
+  }
+}
+}

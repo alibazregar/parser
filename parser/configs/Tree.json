@@ -9,20 +9,17 @@
       "renderto": {},
       "rendertype": { "Values": [ "None", "Append", "Replace" ] },
       "datamembername": {
-        "To": "data-member-name",
-        "Required": true
+        "To": "data-member-name"
       },
       "nullvalue": {
         "To": "null-value",
         "Required": true
       },
       "idcol": {
-        "To": "principal-key",
-        "Required": true
+        "To": "principal-key"
       },
       "parentidcol": {
-        "To": "foreign-key",
-        "Required": true
+        "To": "foreign-key"
       },
       "relationnamecol": {
         "To": "relation-column-name"

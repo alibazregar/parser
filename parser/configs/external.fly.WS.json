@@ -1,0 +1,29 @@
+{
+  "External.fly.ws": {
+    "AddExtraAttribute": true,
+    "Attributes": {
+      "core": {},
+      "name": {},
+      "if": {},
+      "run": { "Values": [ "AtServer", "AtClient", "None" ] },
+      "renderto": {},
+      "source": { "To": "ConnectionName" }
+    },
+    "Elements": {
+      "member": {
+        "To": "Members",
+        "Multi": true,
+        "AddExtraAttribute": true,
+        "Attributes": {
+          "name": { "Required": true },
+          "preview": {},
+          "postsql": {},
+          "sort": {},
+          "method": {},
+          "query": {}
+
+        }
+      }
+    }
+  }
+}

@@ -1,9 +1,9 @@
 import fs from "fs";
 import path from "path";
-import IL from "./models/IL.mjs";
+import IL from "./models/IL.js";
 import { fileURLToPath } from "url";
 import { promises as fsPromises } from "fs";
-import CustomError from "./models/customError.mjs";
+import CustomError from "./models/customError.js";
 
 class ConvertTORawHtml {
   parserConfig;
@@ -78,29 +78,30 @@ class ConvertTORawHtml {
   async processIL(object) {
     return new Promise(async (resolve, reject) => {
       let finalString = "";
-      for (let childObject of object.Commands) {
-        let childObjectResult;
+      if (object.Commands)
+        for (let childObject of object.Commands) {
+          let childObjectResult;
 
-        if (
-          !childObject ||
-          childObject == {} ||
-          Object.keys(childObject) == 0
-        ) {
-          continue;
+          if (
+            !childObject ||
+            childObject == {} ||
+            Object.keys(childObject) == 0
+          ) {
+            continue;
+          }
+          if (childObject["$type"] == "htmltag") {
+            childObjectResult = await this._processHtmlTagType(childObject);
+          } else if (childObject["$type"] == "rawtext") {
+            childObjectResult = await this._processRawTextType(childObject);
+          } else if (!childObject["$type"]) {
+            throw new CustomError(
+              `type for one of objects with core of ${childObject["core"]} is not defined`
+            );
+          } else {
+            childObjectResult = await this._processBasisTagType(childObject);
+          }
+          finalString += childObjectResult;
         }
-        if (childObject["$type"] == "htmltag") {
-          childObjectResult = await this._processHtmlTagType(childObject);
-        } else if (childObject["$type"] == "rawtext") {
-          childObjectResult = await this._processRawTextType(childObject);
-        } else if (!childObject["$type"]) {
-          throw new CustomError(
-            `type for one of objects with core of ${childObject["core"]} is not defined`
-          );
-        } else {
-          childObjectResult = await this._processBasisTagType(childObject);
-        }
-        finalString += childObjectResult;
-      }
       resolve(finalString);
     });
   }
@@ -114,7 +115,7 @@ class ConvertTORawHtml {
       return "";
     }
     const array = Object.entries(obj).map(
-      ([key, value]) => ` ${key}='${value}'`
+      ([key, value]) => ` ${key}="${value}"`
     );
     return array.join(" ");
   }
@@ -173,7 +174,7 @@ class ConvertTORawHtml {
         }
         if (element.Value) {
           finalString += `(${element.Value})`;
-        }else{
+        } else {
           finalString = finalString.slice(0, -1);
         }
         finalString += `##]`;
@@ -181,7 +182,6 @@ class ConvertTORawHtml {
         throw new CustomError("Invalid Type");
       }
     });
-    console.log(finalString);
     return finalString;
   }
   /**
@@ -202,7 +202,7 @@ class ConvertTORawHtml {
    */
   async _processBasisTagType(object) {
     return new Promise(async (resolve, reject) => {
-      let finalResult = `<basis core='${object.core}'`;
+      let finalResult = `<basis core="${object.core}"`;
       const objectConfig = this.configObj[object.core];
       delete object.core;
       delete objectConfig.core;
@@ -211,7 +211,7 @@ class ConvertTORawHtml {
         if (objectConfig.Attributes[i].To) {
           if (object[objectConfig.Attributes[i].To]) {
             if (typeof objectConfig.Attributes[i].To == "object") {
-              let finalString = `'${i}=[##`;
+              let finalString = `"${i}=[##`;
               for (let bindings of objectConfig.Attributes[i].To.Params) {
                 finalString += `${bindings.Source}.${bindings.Member}.${bindings.Column}|`;
               }
@@ -219,10 +219,10 @@ class ConvertTORawHtml {
                 finalString += `(${objectConfig.Attributes[i].To.Value})`;
               }
 
-              finalResult += finalString.slice(0, -1) + `##] '`;
+              finalResult += finalString.slice(0, -1) + `##] "`;
               delete object[objectConfig.Attributes[i].To];
             } else {
-              finalResult += `${i}='${object[objectConfig.Attributes[i].To]} '`;
+              finalResult += ` ${i}="${object[objectConfig.Attributes[i].To]}"`;
               delete object[objectConfig.Attributes[i].To];
             }
           } else {
@@ -239,20 +239,19 @@ class ConvertTORawHtml {
               continue;
             }
             if (typeof object[i] == "object") {
-              let finalString = `${i}='[##`;
+              let finalString = `${i}="[##`;
               for (let bindings of object[i].Params) {
                 finalString += `${bindings.Source}.${bindings.Member}.${bindings.Column}|`;
               }
               if (element.Value) {
                 finalString += `(${object[i].Value})`;
-              }else{
+              } else {
                 finalString = finalString.slice(0, -1);
               }
-              finalResult += `##]' `;
-
+              finalResult += `##]" `;
               delete object[i];
             } else {
-              finalResult += `${i}='${object[i]}' `;
+              finalResult += `${i}="${object[i]}" `;
               delete object[i];
             }
           }
@@ -261,17 +260,17 @@ class ConvertTORawHtml {
       if (objectConfig.AddExtraAttribute == true && object["extra-attribute"]) {
         for (let j in object["extra-attribute"]) {
           if (typeof object["extra-attribute"][j] == "object") {
-            let finalString = `${j}='[##`;
+            let finalString = ` ${j}="[##`;
             for (let bindings of object["extra-attribute"][j].Params) {
               finalString += `${bindings.Source}.${bindings.Member}.${bindings.Column}|`;
             }
             if (object["extra-attribute"][j].Value) {
               finalString += `(${object["extra-attribute"][j].Value})`;
             }
-            finalString = finalString.slice(0, -1);
-            finalResult +=  `##]'`;
+            finalResult += finalString.slice(0, -1);
+            finalResult += `##]"`;
           } else {
-            finalResult += `${j}='${object["extra-attribute"][j]}' `;
+            finalResult += `${j}="${object["extra-attribute"][j]}"`;
           }
         }
         delete object["extra-attribute"];
@@ -327,14 +326,13 @@ class ConvertTORawHtml {
           if (element == elementsConfig[config].To || element == config) {
             if (Array.isArray(object[element])) {
               object[element].forEach((subElement) => {
-                console.log(subElement)
                 let extraAttrString = "";
                 if (
                   elementsConfig[config].AddExtraAttribute == true &&
                   subElement["extra-attribute"]
                 ) {
                   for (let j in subElement["extra-attribute"]) {
-                    extraAttrString += `${j}='${subElement["extra-attribute"][j]}' `;
+                    extraAttrString += `${j}="${subElement["extra-attribute"][j]}" `;
                   }
                   delete subElement["extra-attribute"];
                 } else if (
@@ -344,7 +342,7 @@ class ConvertTORawHtml {
                   throw new CustomError("adding extra attributes not allowed");
                 }
                 const content = subElement.content;
-                
+
                 if (!content) {
                   result += `<${config} ${this.objectToKeyValueString(
                     subElement
@@ -369,7 +367,7 @@ class ConvertTORawHtml {
                 object[element]["extra-attribute"]
               ) {
                 for (let j in object[element]["extra-attribute"]) {
-                  extraAttrString += `${j}='${object[element]["extra-attribute"][j]}' `;
+                  extraAttrString += `${j}="${object[element]["extra-attribute"][j]}" `;
                 }
                 delete object[element]["extra-attribute"];
               } else if (
@@ -491,10 +489,50 @@ class ConvertTORawHtml {
       const result = await convertTORawHtml.processIL(json);
       return result;
     } catch (error) {
-      throw error
+      throw error;
     }
   }
-
+  static FindILByCore(il, core) {
+    let retVal = [];
+    if (il.core == core) retVal.push(il);
+    if (il.Commands && il.Commands?.length > 0) {
+      il.Commands.forEach((command) => {
+        retVal.push(...ConvertTORawHtml.FindILByCore(command, core));
+      });
+    }
+    return retVal;
+  }
+  static async FindCommandByCore(
+    il,
+    core,
+    parserConfig = "./parserConfig.json"
+  ) {
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
+    const convertTORawHtml = new ConvertTORawHtml("/configs");
+    await convertTORawHtml._getTheParserConfig(
+      path.join(__dirname, parserConfig)
+    );
+    const retVal = ConvertTORawHtml.FindILByCore(il, core);
+    return Promise.all(
+      retVal.map(async(command) => {
+        if (!command || command == {} || Object.keys(command) == 0) {
+          return;
+        }
+        if (command["$type"] == "htmltag") {
+          return {core : core, command:await convertTORawHtml._processHtmlTagType(command)};
+        } else if (command["$type"] == "rawtext") {
+          return {core : core, command:await convertTORawHtml._processRawTextType(command)}
+        } else if (!command["$type"]) {
+          throw new CustomError(
+            `type for one of objects with core of ${command["core"]} is not defined`
+          );
+        } else {
+          return {core : core, command: await convertTORawHtml._processBasisTagType(command)};
+        }
+      })
+    );
+  }
   /**
    *
    * @param {string} filepath
@@ -517,4 +555,4 @@ class ConvertTORawHtml {
     }
   }
 }
-export default ConvertTORawHtml
+export default ConvertTORawHtml;

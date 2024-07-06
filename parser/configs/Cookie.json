@@ -10,7 +10,6 @@
       "run": { "Values": [ "AtServer", "AtClient", "None" ] },
       "renderto": {},
       "value": {
-        "Required": true
       },
       "max-age": {
         "to": "MaxAge"
